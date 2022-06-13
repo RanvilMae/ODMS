@@ -1,0 +1,38 @@
+body {
+	background: #f1f2f7;
+}
+
+.panel {
+    border: none;
+    box-shadow: none;
+}
+
+.panel {
+    margin-bottom: 20px;
+    margin-top: 15px;
+    background-color: #fff;
+    border-radius: 4px;
+}
+
+.panel-heading {
+    font-size: 13px;
+    font-weight: 400;
+    background: #fafafa;
+    text-transform: uppercase;
+    padding: 15px;
+}
+
+.panel-heading {
+    padding: 10px 15px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 3px;
+}
+
+.panel-body {
+    padding: 15px;
+}
+
+.position-center {
+    width: 62%;
+    margin: 0 auto;
+}
