@@ -93,11 +93,6 @@ require("conn.php");
 
  <main role="main" class="container-fluid">
   <div class="jumbotron">  
-  	<a href="search.php" class="text-decoration-none float-right">&nbsp;
-         <button type="button" title="SEARCH"  class="btn btn-primary" >
-         	<i class="fas fa-search"></i>
-         </button>
-       </a>
 
 		<div class="dropdown float-right">
 		  <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -289,7 +284,18 @@ require("conn.php");
 
     <div>
        <h3><strong>VIEW DATA</strong></h3>
-    </div>
+    </div> <br>
+    <form method="get" action="viewdata.php" >
+    	<div class="row" class="float-right"> 
+    		<div class="col-lg-4" >
+    			<label style="text-decoration-none;color:RED">Please search and scan barcode here..</label>
+    			<input type="text" class="form-control" name="str" placeholder="Search.." value="<?php echo (isset($_GET['str'])) ? $_GET['str'] : ''; ?>">
+    		</div>
+    		<div class="col-lg-4"><br>
+    			<button type="submit" class="btn btn-primary" value="1">Search</button>
+    		</div>
+    	</div>
+    </form>
     <div>
       <hr>
     </div>
@@ -311,18 +317,35 @@ require("conn.php");
     			</thead>
     			<tbody>
     				<?php
+    					if(isset($_GET['str']))
+								{
+									$where = $_GET['str'];
+									$x = "";
+								}
+								else
+								{
+									$where = " ";
+									$x = "LIMIT 50";
+								}
     					include('conn.php');
     					$id 		= (int) $_SESSION['login'];
-						$query 		= $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
-						$get 		= $query->fetch_array ();
-						$department = $get['department'];
-						$nquery		= mysqli_query($conn,"select * from `files` WHERE department = '$department'  ORDER by id DESC LIMIT 100");
-						while($fetch = mysqli_fetch_array($nquery)){
-							$id = $fetch['id'];
-							$subject = $fetch['subject'];
-							$classification = $fetch['classification'];
-							$for_specific = $fetch['for_specific'];
-							$from_specific = $fetch['from_specific'];
+							$query 		= $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
+							$get 		= $query->fetch_array ();
+							$department = $get['department'];
+							$nquery		= mysqli_query($conn,"select * from `files` WHERE 
+								department = '$department' AND docu_id LIKE '%".$where."%' OR
+								department = '$department' AND forw LIKE '%".$where."%' OR 
+								department = '$department' AND fromw LIKE '%".$where."%' OR 
+								department = '$department' AND subject LIKE '%".$where."%' OR  
+								department = '$department' AND restriction LIKE '%".$where."%' OR 
+								department = '$department' AND category LIKE '%".$where."%'  
+								ORDER BY id DESC ".$x );
+							while($fetch = mysqli_fetch_array($nquery)){
+								$id = $fetch['id'];
+								$subject = $fetch['subject'];
+								$classification = $fetch['classification'];
+								$for_specific = $fetch['for_specific'];
+								$from_specific = $fetch['from_specific'];
     				?>
     					<tr>
 				          	<td style="color: black;"><?php echo $fetch['docu_id']; ?></td>
@@ -520,19 +543,37 @@ require("conn.php");
     		</table>
     	</div>
     </div>
-	<?php
+	
+    				<?php
+    					if(isset($_GET['str']))
+								{
+									$where = $_GET['str'];
+									$x = "";
+								}
+								else
+								{
+									$where = " ";
+									$x = "LIMIT 50";
+								}
     					include('conn.php');
     					$id 		= (int) $_SESSION['login'];
-						$query 		= $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
-						$get 		= $query->fetch_array ();
-						$department = $get['department'];
-						$nquery		= mysqli_query($conn,"select * from `files` WHERE department = '$department'  ORDER by id DESC LIMIT 100");
-						while($fetch = mysqli_fetch_array($nquery)){
-							$id = $fetch['id'];
-							$subject = $fetch['subject'];
-							$classification = $fetch['classification'];
-							$for_specific = $fetch['for_specific'];
-							$from_specific = $fetch['from_specific'];
+							$query 		= $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
+							$get 		= $query->fetch_array ();
+							$department = $get['department'];
+							$nquery		= mysqli_query($conn,"select * from `files` WHERE 
+								department = '$department' AND docu_id LIKE '%".$where."%' OR
+								department = '$department' AND forw LIKE '%".$where."%' OR 
+								department = '$department' AND fromw LIKE '%".$where."%' OR 
+								department = '$department' AND subject LIKE '%".$where."%' OR  
+								department = '$department' AND restriction LIKE '%".$where."%' OR 
+								department = '$department' AND category LIKE '%".$where."%'  
+								ORDER BY id DESC ".$x );
+							while($fetch = mysqli_fetch_array($nquery)){
+								$id = $fetch['id'];
+								$subject = $fetch['subject'];
+								$classification = $fetch['classification'];
+								$for_specific = $fetch['for_specific'];
+								$from_specific = $fetch['from_specific'];
     				?>
 	
 	 <!---Modal for SUB FILE ----->
@@ -626,21 +667,38 @@ require("conn.php");
     	</div>
     </div>
 
-	<?php
+		
+    				<?php
+    					if(isset($_GET['str']))
+								{
+									$where = $_GET['str'];
+									$x = "";
+								}
+								else
+								{
+									$where = " ";
+									$x = "LIMIT 50";
+								}
     					include('conn.php');
     					$id 		= (int) $_SESSION['login'];
-						$query 		= $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
-						$get 		= $query->fetch_array ();
-						$department = $get['department'];
-						$nquery		= mysqli_query($conn,"select * from `files` WHERE department = '$department'  ORDER by id DESC LIMIT 100");
-						while($fetch = mysqli_fetch_array($nquery)){
-							$id = $fetch['id'];
-							$subject = $fetch['subject'];
-							$classification = $fetch['classification'];
-							$for_specific = $fetch['for_specific'];
-							$from_specific = $fetch['from_specific'];
+							$query 		= $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
+							$get 		= $query->fetch_array ();
+							$department = $get['department'];
+							$nquery		= mysqli_query($conn,"select * from `files` WHERE 
+								department = '$department' AND docu_id LIKE '%".$where."%' OR
+								department = '$department' AND forw LIKE '%".$where."%' OR 
+								department = '$department' AND fromw LIKE '%".$where."%' OR 
+								department = '$department' AND subject LIKE '%".$where."%' OR  
+								department = '$department' AND restriction LIKE '%".$where."%' OR 
+								department = '$department' AND category LIKE '%".$where."%'  
+								ORDER BY id DESC ".$x );
+							while($fetch = mysqli_fetch_array($nquery)){
+								$id = $fetch['id'];
+								$subject = $fetch['subject'];
+								$classification = $fetch['classification'];
+								$for_specific = $fetch['for_specific'];
+								$from_specific = $fetch['from_specific'];
     				?>
-
     <!---Modal for STATUS ----->
     <div class="modal fade" id="myModall<?php echo $fetch['id']?>" aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -733,19 +791,37 @@ require("conn.php");
     	</div>
     </div>
 		
-	<?php
+	
+    				<?php
+    					if(isset($_GET['str']))
+								{
+									$where = $_GET['str'];
+									$x = "";
+								}
+								else
+								{
+									$where = " ";
+									$x = "LIMIT 50";
+								}
     					include('conn.php');
     					$id 		= (int) $_SESSION['login'];
-						$query 		= $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
-						$get 		= $query->fetch_array ();
-						$department = $get['department'];
-						$nquery		= mysqli_query($conn,"select * from `files` WHERE department = '$department'  ORDER by id DESC LIMIT 100");
-						while($fetch = mysqli_fetch_array($nquery)){
-							$id = $fetch['id'];
-							$subject = $fetch['subject'];
-							$classification = $fetch['classification'];
-							$for_specific = $fetch['for_specific'];
-							$from_specific = $fetch['from_specific'];
+							$query 		= $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
+							$get 		= $query->fetch_array ();
+							$department = $get['department'];
+							$nquery		= mysqli_query($conn,"select * from `files` WHERE 
+								department = '$department' AND docu_id LIKE '%".$where."%' OR
+								department = '$department' AND forw LIKE '%".$where."%' OR 
+								department = '$department' AND fromw LIKE '%".$where."%' OR 
+								department = '$department' AND subject LIKE '%".$where."%' OR  
+								department = '$department' AND restriction LIKE '%".$where."%' OR 
+								department = '$department' AND category LIKE '%".$where."%'  
+								ORDER BY id DESC ".$x );
+							while($fetch = mysqli_fetch_array($nquery)){
+								$id = $fetch['id'];
+								$subject = $fetch['subject'];
+								$classification = $fetch['classification'];
+								$for_specific = $fetch['for_specific'];
+								$from_specific = $fetch['from_specific'];
     				?>
  <!---Modal for TAGS----->
     <div class="modal fade" id="tags<?php echo $fetch['id']?>" aria-hidden="true">
@@ -1064,9 +1140,12 @@ require("conn.php");
   	<script type="text/javascript">
   		$(document).ready(function () {
   			$('#data_table').DataTable( {
-  			    "order": [[ 4, "desc"]]
+  			   
+  			    "order": [[ 4, "desc"]],
+
   			}
   			    );
+	  			    $('#data_table_filter').hide();
   		});
   	</script>
       </body>

@@ -39,7 +39,8 @@
 
 		<div class="btn-group">
 			<a class="nav-link" href="viewdata.php"> <?php echo $department ?> FILES</a>
-			<a class="nav-link  notification" href="incoming_a.php"> TAGGED FILES
+			<a class="nav-link  notification" href="incoming_a.php"> TAGGED FILES</a>
+			<a class="nav-link  notification" href="tagged_files.php">
 			 	<span class="badge">
 					<?php
 						$sql = "SELECT COUNT(id) FROM tags WHERE tag = '$tid' AND track = '0' ";  
@@ -50,7 +51,8 @@
 					?>
 				</span/>
 			</a>
-		</div>&nbsp;&nbsp;&nbsp;&nbsp;
+			
+		</div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<!-- <div class="btn-group">
 					
 					<div class="nav-link dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="text-decoration-none;color:white;">

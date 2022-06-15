@@ -28,7 +28,12 @@ include('pagination_admin.php');
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="datatable/datatable.css">
     <!-- Bootstrap core CSS -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">   
+<!--------Bootstrap core CSS -->
+	<link rel="stylesheet" href="bootsratp/fonts/all.css">
+
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" >
+	<link rel="stylesheet" type="text/css" href="datatable/datatable.css">
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -39,14 +44,13 @@ include('pagination_admin.php');
         user-select: none;
       }
 	  body, html {
-			background-image: url("images/bg.png");
+			background-image: url("bg.png");
 			height: 100%;
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: cover;
 		}
 .jumbotron{
-		background-image: url("bg.png");
 			background-position: center;
 			background-repeat: no-repeat;
 			background-size: cover;
@@ -88,142 +92,30 @@ include('pagination_admin.php');
   </head>
   <body>
 
-<?php include 'navigation_admin.php';?>
+<?php include 'navigation_admin.php';
+
+$id = (int) $_SESSION['login'];
+			$query = $conn->query ("SELECT * FROM `admin` WHERE id = '$id' ORDER BY date DESC ") or die (mysqli_error());
+		$file = $query->fetch_array ();
+		$tid = $file['tid'];
+		?>
 
  
  <main role="main" class="container-fluid">
-  <div class="jumbotron">  
-        <a href="search.php" class="text-decoration-none float-right">&nbsp;
-         <button type="button" title="SEARCH"  class="btn btn-primary" ><i class="fas fa-search"></i></button>
-      </button></a>
+  <div class="jumbotron"> 
 
 		<div class="dropdown float-right">
 		  <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 			<i class="fas fa-download"></i>
 		  </button>
 		  <div class="dropdown-menu " aria-labelledby="dropdownMenuButton">
-			<a class="dropdown-item" href="download_bulkc.php?department=<?php echo $fetch['department']?>" target="_blank" >BULK</a>
+			<a class="dropdown-item" href="download_bulk_tag.php?tid=<?php echo $tid?>" target="_blank" >BULK</a>
 			<a  class="dropdown-item" data-toggle="modal" data-target="#tagss<?php echo $fetch['id']?>">
 			BY DATE
-			</a>
-			<a  class="dropdown-item" data-toggle="modal" data-target="#string<?php echo $fetch['id']?>">
-			BY STRING
-			</a>
-			<a  class="dropdown-item" data-toggle="modal" data-target="#cat<?php echo $fetch['id']?>">
-			BY CATEGORY
 			</a>
 		  </div>
 		</div>
 		
-		<!---Modal for DOWNLOAD CATEGORY----->
-    <div class="modal fade" id="cat<?php echo $fetch['id']?>" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-			<div class="modal-header">
-				<h3 class="modal-title">DOWNLOAD BY CATEGORY</h3>
-			</div>
-          
-			<div class="modal-body">
-			<div class="Container">
-			<div>
-				<form method="POST" action= "download_cat.php?department=<?php echo $fetch['department']?>">
-					<!-- Modal content-->
-					<div class="modal-content">
-						<div class="modal-header">   
-							<h4 class="modal-title"><b>Select Category</b></h4>
-						</div>
-						<div class="modal-body">
-		
-							<div class="row">
-								<div class="col" required>
-									<label><strong>Category:</strong> </label>
-									<select id="category" name="category" class="form-control">
-										<option value="0">--SELECT--</option>
-										<?php 
-										// Fetch Category
-										$sql_cat = "SELECT * FROM category";
-										$cat_data = mysqli_query($conn,$sql_cat);
-										while($row = mysqli_fetch_assoc($cat_data) ){
-											$category= $row['category'];
-										  
-											// Option
-										echo "<option value='".$category."' >".$category."</option>";
-										?>
-										<?PHP
-										}
-										
-										?>
-									</select>
-								</div>
-							</div>							
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-window-close"></i></button>
-
-								<a href="download_cat.php" target="_blank" class="text-decoration-none">
-									<button title="PREVIEW"  type="submit" class="btn btn-success"  name="submit" >
-										<i class="fas fa-share-square"></i>
-									</button>
-								</a>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-		</div>
-		</div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-
-
-
-		<!---Modal for DOWNLOAD STRING----->
-    <div class="modal fade" id="string<?php echo $fetch['id']?>" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-			<div class="modal-header">
-				<h3 class="modal-title">DOWNLOAD BY STRING</h3>
-			</div>
-          
-			<div class="modal-body">
-			<div class="Container">
-			<div>
-				<form method="POST" action= "download_string.php?department=<?php echo $fetch['department']?>">
-					<!-- Modal content-->
-					<div class="modal-content">
-						<div class="modal-header">   
-							<h4 class="modal-title"><b>Input String</b></h4>
-						</div>
-						<div class="modal-body">
-		
-							<div class="row">
-								<div class="col" required>
-										<input type="text" class="form-control" id="string" name="string" title="Please input text here." required />
-									</div>
-							</div>							
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-window-close"></i></button>
-
-								<a href="download_string.php" target="_blank" class="text-decoration-none">
-									<button title="PREVIEW"  type="submit" class="btn btn-success"  name="submit" >
-										<i class="fas fa-share-square"></i>
-									</button>
-								</a>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-		</div>
-		</div>
-        <!-- /.modal-content -->
-      </div>
-      <!-- /.modal-dialog -->
-    </div>
-	
 	
 	<!---download date----->
     <div class="modal fade" id="tagss<?php echo $fetch['id']?>" aria-hidden="true">
@@ -238,7 +130,7 @@ include('pagination_admin.php');
 
             <div class="Container">
     <div>
-    <form method="POST" action= "download_bydate.php?department=<?php echo $fetch['department']?>">
+    <form method="POST" action= "download_bydate.php?tid=<?php echo $tid?>">
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">   
@@ -285,58 +177,85 @@ include('pagination_admin.php');
     </div>
 
     <div>
-       <h3><strong>VIEW DATA</strong></h3>
-    </div>
+       <h3><strong>INCOMING FILE/S</strong></h3>
+    </div><br>
+        <form method="get" action="incoming_a.php" >
+    	<div class="row" class="float-right"> 
+    		<div class="col-lg-4" >
+    			<label style="text-decoration-none;color:RED">Please search and scan barcode here..</label>
+    			<input type="text" class="form-control" name="str" placeholder="Search.." value="<?php echo (isset($_GET['str'])) ? $_GET['str'] : ''; ?>">
+    		</div>
+    		<div class="col-lg-4"><br>
+    			<button type="submit" class="btn btn-primary" value="1">Search</button>
+    		</div>
+    	</div>
+    </form>
     <div>
       <hr>
     </div>
- <div class="row">
+   
+     <div class="row">
     	<div class="col-lg-12">
     		<table class="table table-dark " id="data_table">
     			<thead>
-                    <tr >
-                        <td width="15%"><strong>RECORD ID</strong></td>
-                        <td width="20%"><strong>FROM</strong></td>
-                		<td width="10%"><strong>CATEGORY</strong></td>
-                        <td width="30%"><strong>SUBJECT</strong></td>
-                		<td width="10%"><strong>DATE</strong></td>
-                		<td width="10%"><strong>FILE TYPE</strong></td>
-                		<td align="center" width="15%"><strong>ACTION</strong></td>
-                    </tr>
-   
+    				<tr>
+				        <th width="15%"><strong>RECORD ID</strong></th>
+				        <th width="20%"><strong>FROM</strong></th>
+						<th width="10%"><strong>CATEGORY</strong></th>
+				        <th width="30%"><strong>SUBJECT</strong></th>
+						<th width="10%"><strong>DATE</strong></th>
+						<th width="10%"><strong>FILE TYPE</strong></th>
+						<th align="center" width="15%"><strong>ACTION</strong></th>
+				    </tr>
     			</thead>
     			<tbody>
+	<?php
+		if(isset($_GET['str']))
+		{
+			$where = $_GET['str'];
+			$x = "";
+		}
+		else
+		{
+			$where = " ";
+			$x = "LIMIT 50";
+		}
+include('conn.php');
+		 $id = (int) $_SESSION['login'];
+			$query = $conn->query ("SELECT * FROM `admin` WHERE id = '$id' ORDER BY date DESC ") or die (mysqli_error());
+		$file = $query->fetch_array ();
+		$tid = $file['tid'];
+			$nquery=mysqli_query($conn,"select * from `tags` WHERE tag = '$tid' AND `track` = '0' ORDER BY id DESC ".$x );
+			foreach ( $nquery as $get){
+    			$track = $get['track'];
+    			$primary_id = $get['primary_id'];
+    			$id = $get['id'];
+          $result = mysqli_query($conn,"SELECT * FROM `files` WHERE id = '$id' AND subject LIKE '%".$where."%' OR id = '$id' AND docu_id LIKE '%".$where."%' ORDER BY id DESC ".$x );
+            foreach ( $result as $fetch){
+    			$id = $fetch['id'];
+    			$subject = $fetch['subject'];
+    			$classification = $fetch['classification'];
+    			$receive = $fetch['receive']
+		
+	
+    ?>
+
 
 	
-<?php
-include('conn.php');
-					$id = (int) $_SESSION['login'];
-		$query = $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
-		$get = $query->fetch_array ();
-		$department = $get['department'];
-		$nquery=mysqli_query($conn,"select * from `files` WHERE department = '$department' AND classification = 'Outgoing' ORDER by id DESC ");
-		while($fetch = mysqli_fetch_array($nquery)){
-			$id = $fetch['id'];
-			$subject = $fetch['subject'];
-			$classification = $fetch['classification'];
-		
-					
-    ?>
-	
-        <tr>
-     <td style="color: black;"><?php echo $fetch['docu_id']; ?></td>
+         <tr>
+      <td style="color: black;"><?php echo $fetch['docu_id']; ?></td>
 				          	<td style="color: black;"><?php echo $fetch['fromw']; ?><br><?php echo $fetch['from_specific']; ?></td>
 						  	<td style="color: black;"><?php echo $fetch['category']; ?></td>
 				          	<td style="color: black;"><?php echo $fetch['subject']; ?></td>
 				          	<td style="color: black;"><?php echo $fetch['date']; ?></td>
-				          	<td style="color: black;"><?php echo $fetch['restriction']; ?></td>
-		   
-			 <td align="center">
+				          	<td style="color: black;">INCOMING</td>
 		   
 			 <td align="center">
 			 	<div class="btn-group btn-group-justified">
+			 	    
+			 	 
 					<button type="button" class="btn btn-primary" title="STATUS">
-						<a class="notif"  data-toggle="modal" data-target="#myModall<?php echo $fetch['id']?>" style="text-decoration-none;color:white;"><i class="far fa-file"></i><span class="badges count-notif" >
+						<a class="notif" href="incoming_a.php" data-toggle="modal" data-target="#myModall<?php echo $fetch['id']?>" style="text-decoration-none;color:white;"><i class="far fa-file"></i><span class="badges count-notif" >
 								<?php
                             		 $id = $fetch['id'];
                                 $sql = "SELECT COUNT(id) FROM `remarks` WHERE `id` = '$id'";  
@@ -380,7 +299,7 @@ include('conn.php');
 					
 						?>
 
-					<button type="button" class="btn btn-primary" title="EDIT">
+					<button type="button" class="btn btn-primary" title="DETAILS">
 						<a data-toggle="modal" data-target="#myModal<?php echo $fetch['id']?>" style="text-decoration-none;color:white;">
 							<i class="far fa-edit"></i>
 						</a>
@@ -391,24 +310,84 @@ include('conn.php');
 							<i class="fas fa-tags"></i>
 						</a>
 					</button>
+					
+				<?php 
 
-					<button type="button" class="btn btn-primary" title="PREVIEW">
-						<a href="uploads/<?php echo $fetch['department']?>/<?php echo $fetch['name']?>" target="_blank" class="text-decoration-none" style="color:white;">
-							<i class="fas fa-eye"></i>
-						</a>
-					</button>
+					
+				if ($track == 1){
+						$id = $fetch['id'];
+						$query = $conn->query("SELECT * FROM `files` WHERE `id` = '$id'");
+						$get=$query->fetch_array  ();
+						$name = $get['name'];
+						$department = $get['department'];
+				?>
+
+
+				<button type="button" class="btn btn-primary" title="PREVIEW">
+										<a href="uploads/<?php echo $department?>/<?php echo $name?>" target="_blank" class="text-decoration-none" style="color:white;">
+											<i class="fas fa-eye"></i>
+										</a>
+				</button>
+
+				<?php }
+					else
+					{
+						?>
+
+					  	<button type="button" class="btn btn-primary" title="VIEW">
+										<a data-toggle="modal" data-target="#qr<?php echo $fetch['id']?>" style="text-decoration-none;color:#ff8a80;">
+											<i class="fas fa-eye"></i>
+										</a>
+									</button>
+						<?php 
+						}
+					
+						?>			
+
+
+							  <!----MODAL FOR QRCODE-->
+	  <div class="modal fade" id="qr<?php echo $fetch['id']?>" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel"><strong>INSERT QR CODE</strong></h5>
+					</div>
+					<div class="modal-body">
+
+					
+						<form action="qrlogic.php?id=<?php echo $fetch['id'] ?>" method="post" enctype="multipart/form-data">
+      				<input type="password"  class="form-control" placeholder="QR CODE" name="qrcode" autofocus><br>
+      				<input class="form-control" name="date" required readonly="read-only" value="<?php date_default_timezone_set("Asia/Manila"); echo date("Y-m-d H:i:s");?>" ><br>
+      					<?php
+						$id = (int) $_SESSION['login'];
+						$query = $conn->query ("SELECT * FROM `admin` WHERE id = '$id' ORDER BY date DESC ") or die (mysqli_error());
+						$file = $query->fetch_array ();
+						$tid = $file['tid'];
+
+					?>
+      				<input type="hidden" class="form-control" name="tag"  value="<?php echo $file['tid'] ?>" ><br>
+
+						<div class="modal-footer">
+						 	<button type="button" class="btn btn-danger" data-dismiss="modal">
+						 		<i class="fas fa-window-close"></i>
+						 	</button>
+						 	<button type="submit" title="SCAN" name="qr" target='_blank' class="btn btn-primary float-right"><i class="fas fa-upload"></i></button>
+						</div>
+
+						</form>
+      		</div>
+    		</div>
+  		</div>
+		</div>	
 				
-							
-					<!---	<button type="button" name="delete" class="btn btn-primary" title="DELETE">
-						<a data-toggle="modal" data-target="#delete<?php echo $fetch['id']?>" style="text-decoration-none;color:white;">
-							<i class="fas fa-trash-alt"></i>
-						</a>
-				</button> --->
+					
+					
+				
 				</div>
 			</td>
 		
 		  
-		
+			<?php }}?>
 		
 		
 		
@@ -429,7 +408,37 @@ include('conn.php');
       </div>
     </div>
   </div>
-</div>
+</div>	
+	<?php
+		if(isset($_GET['str']))
+		{
+			$where = $_GET['str'];
+			$x = "";
+		}
+		else
+		{
+			$where = " ";
+			$x = "LIMIT 50";
+		}
+include('conn.php');
+		 $id = (int) $_SESSION['login'];
+			$query = $conn->query ("SELECT * FROM `admin` WHERE id = '$id' ORDER BY date DESC ") or die (mysqli_error());
+		$file = $query->fetch_array ();
+		$tid = $file['tid'];
+			$nquery=mysqli_query($conn,"select * from `tags` WHERE tag = '$tid' AND `track` = '0' ORDER BY id DESC ".$x );
+			foreach ( $nquery as $get){
+    			$track = $get['track'];
+    			$primary_id = $get['primary_id'];
+    			$id = $get['id'];
+          $result = mysqli_query($conn,"SELECT * FROM `files` WHERE id = '$id' AND subject LIKE '%".$where."%' OR id = '$id' AND docu_id LIKE '%".$where."%' ORDER BY id DESC ".$x );
+            foreach ( $result as $fetch){
+    			$id = $fetch['id'];
+    			$subject = $fetch['subject'];
+    			$classification = $fetch['classification'];
+    			$receive = $fetch['receive']
+		
+	
+    ?>
 		        <!---Modal for EDit ----->
 				<div class="modal fade" id="myModal<?php echo $fetch['id']?>" aria-hidden="true">
 					<div class="modal-dialog">
@@ -437,7 +446,7 @@ include('conn.php');
 			
 							<form method="POST"  enctype="multipart/form-data">
 								<div class="modal-header">
-									<h3><strong>UPDATE</strong></h3>
+									<h3><strong>DETAILS</strong></h3>
 									
 								</div>
 								<div class="modal-header">
@@ -471,21 +480,16 @@ include('conn.php');
 								<div class="row" required>
 								<div class="col">
 									<label for="forw"><strong>For / To:</strong></label>
-									<input class="form-control" type="text" name="forw" placeholder="For:" 
+									<input class="form-control"  readonly="read-only" type="text" name="forw" placeholder="For:" 
 									value="<?php echo $fetch['forw'];?>" />
-									<input class="form-control" type="text" name="for_specific" placeholder="For:" 
-									value="<?php echo $fetch['for_specific'];?>" />
 								</div><br>
 								
 								<div class="col">
 									<label for="from"><strong>From / Signatory:</strong></label>
-									<input class="form-control" type="text" name="fromw" placeholder="From:" 
+									<input class="form-control" type="text" name="fromw"  readonly="read-only" placeholder="From:" 
 									 value="<?php echo $fetch['fromw'];?>" />
-									 <input class="form-control" type="text" name="from_specific" placeholder="For:" 
-									value="<?php echo $fetch['from_specific'];?>" />
-									</div><br>
+								</div>
 								</div><br>
-								
 									<div class="form-row">
 									<div class="col">
 									 	<label><strong>Date:</strong> </label>
@@ -494,31 +498,32 @@ include('conn.php');
 									</div>
 									<div class="col">
 									 <label><strong>Classification:</strong> </label>
-									<input name="classification" class="form-control" rows="5"  type="text" placeholder="Classification:" 
-									value="<?php echo $fetch['classification'];?>" /></input>
+									<input name="classification" class="form-control" rows="5" readonly="read-only"  type="text" placeholder="Classification:" 
+									value="Incoming" /></input>
 									</div>
 								</div><br>
 								
 								<div class="form-row">
 									<div class="col">
 									 <label><strong>Category:</strong> </label>
-									<input class="form-control"  name="category"
+									<input class="form-control"  readonly="read-only"  name="category"
 									 value="<?php echo $fetch['category']; ?>" />
 									</div>
 									
 									<div class="col">
 									 <label><strong># Pages:</strong> </label>
-									<input class="form-control"  name="pages" placeholder="Pages:"
+									<input class="form-control"  readonly="read-only" name="pages" placeholder="Pages:"
 									 value="<?php echo $fetch['pages']; ?>" />
 									</div>
 								</div><br>
 								
 								<label><strong>Subject:</strong></label>
-												<textarea class="form-control" name="subject"
+												<textarea class="form-control" name="subject"  readonly="read-only"
 												 rows="3" ><?php echo $fetch['subject']; ?></textarea><br>
 								
 									<label><strong>File: </strong></label>	
-									<input type="file" class="form-control" name="myfile">
+									<input class="form-control"  readonly="read-only" name="pages" placeholder="Pages:"
+									 value="<?php echo $fetch['name']; ?>" />
 									
 								
 								
@@ -535,27 +540,43 @@ include('conn.php');
 				</div>
 			
 		 <?php
-			}
+			}}
         ?>
+
 
     			</tbody>
     		</table>
     	</div>
     </div>
-	
-<?php
+	<?php
+		if(isset($_GET['str']))
+		{
+			$where = $_GET['str'];
+			$x = "";
+		}
+		else
+		{
+			$where = " ";
+			$x = "LIMIT 50";
+		}
 include('conn.php');
-					$id = (int) $_SESSION['login'];
-		$query = $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
-		$get = $query->fetch_array ();
-		$department = $get['department'];
-		$nquery=mysqli_query($conn,"select * from `files` WHERE department = '$department' AND classification = 'Outgoing' ORDER by id DESC ");
-		while($fetch = mysqli_fetch_array($nquery)){
-			$id = $fetch['id'];
-			$subject = $fetch['subject'];
-			$classification = $fetch['classification'];
+		 $id = (int) $_SESSION['login'];
+			$query = $conn->query ("SELECT * FROM `admin` WHERE id = '$id' ORDER BY date DESC ") or die (mysqli_error());
+		$file = $query->fetch_array ();
+		$tid = $file['tid'];
+			$nquery=mysqli_query($conn,"select * from `tags` WHERE tag = '$tid' AND `track` = '0' ORDER BY id DESC ".$x );
+			foreach ( $nquery as $get){
+    			$track = $get['track'];
+    			$primary_id = $get['primary_id'];
+    			$id = $get['id'];
+          $result = mysqli_query($conn,"SELECT * FROM `files` WHERE id = '$id' AND subject LIKE '%".$where."%' OR id = '$id' AND docu_id LIKE '%".$where."%' ORDER BY id DESC ".$x );
+            foreach ( $result as $fetch){
+    			$id = $fetch['id'];
+    			$subject = $fetch['subject'];
+    			$classification = $fetch['classification'];
+    			$receive = $fetch['receive']
 		
-					
+	
     ?>
 	
 	 <!---Modal for SUB FILE ----->
@@ -576,13 +597,13 @@ include('conn.php');
             <table class="table table-bordered">
               <thead>
                 <tr>
-				  <th class="tablecell">FILE NAME</th>
-				  <th class="tablecell">PAGES</th>
+				 					<th class="tablecell">FILE NAME</th>
+								  <th class="tablecell">REMARKS</th>
+				  				<th class="tablecell">PAGES</th>
                   <th class="tablecell" width: "auto !important">DATE</th>
-				  <th class="tablecell">DEPARTMENT</th>
-				  <th class="tablecell">EMPLOYEE / OFFICER</th>
-				   <th class="tablecell">PREVIEW</th>
-                 
+								  <th class="tablecell">DEPARTMENT</th>
+								  <th class="tablecell">EMPLOYEE / OFFICER</th>
+								  <th class="tablecell">PREVIEW</th>
                 </tr>
               </thead>
 
@@ -592,22 +613,31 @@ include('conn.php');
 
               while($fetch = mysqli_fetch_array($query)){
 				  $name = $fetch['name'];
+				  $track = $fetch['track'];
+				  $primary_id = $fetch['primary_id'];
 
 
               echo "<tbody>";
               echo "<tr>";
               echo "<td width='35%'>". $fetch['sub_docu'] ."</td>";
-			  echo "<td width='10%'>". $fetch['pages'] ."</td>";
-              echo "<td width='25%'>". $fetch['date'] ."</td>";
-			  echo "<td width='25%'>". $fetch['department'] ."</td>";
-			  echo "<td width='30%'>". $fetch['action'] ."</td>";
-			  echo "<td width='30%'>";
-			  echo "<button type='button' class='btn btn-primary' title='PREVIEW'>";
-						echo "<a href='subs/$name' target='_blank' class='text-decoration-none' style='color:white;'>";
-							echo "<i class='fas fa-eye'></i>";
-						echo "</a>";
-					echo "</button>";
-			echo"</td>";
+						  echo "<td width='30%'>". $fetch['remarks'] ."</td>";
+						  echo "<td width='10%'>". $fetch['pages'] ."</td>";
+			        echo "<td width='25%'>". $fetch['date'] ."</td>";
+						  echo "<td width='25%'>". $fetch['department'] ."</td>";
+						  echo "<td width='30%'>". $fetch['action'] ."</td>";
+						  echo "<td width='30%'>";
+					?>
+	
+					
+					<button  class="btn btn-primary"  title="PREVIEW">
+						<a href="fetch_sub.php?primary_id=<?php echo $primary_id?>" target="_blank"  class="text-decoration-none" style="color:white">
+							<i class="fas fa-eye"></i>	
+						</a>
+						</button>
+					<?php 
+			
+					
+							echo"</td>";
               echo "</tr>";
               echo "</tbody>";
 
@@ -642,26 +672,41 @@ include('conn.php');
 	
 	
 	 <?php
-			}
+			}}
         ?>
 
       </tbody>
     </table>
-<?php
+	<?php
+		if(isset($_GET['str']))
+		{
+			$where = $_GET['str'];
+			$x = "";
+		}
+		else
+		{
+			$where = " ";
+			$x = "LIMIT 50";
+		}
 include('conn.php');
-					$id = (int) $_SESSION['login'];
-		$query = $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
-		$get = $query->fetch_array ();
-		$department = $get['department'];
-		$nquery=mysqli_query($conn,"select * from `files` WHERE department = '$department' AND classification = 'Outgoing' ORDER by id DESC ");
-		while($fetch = mysqli_fetch_array($nquery)){
-			$id = $fetch['id'];
-			$subject = $fetch['subject'];
-			$classification = $fetch['classification'];
+		 $id = (int) $_SESSION['login'];
+			$query = $conn->query ("SELECT * FROM `admin` WHERE id = '$id' ORDER BY date DESC ") or die (mysqli_error());
+		$file = $query->fetch_array ();
+		$tid = $file['tid'];
+			$nquery=mysqli_query($conn,"select * from `tags` WHERE tag = '$tid' AND `track` = '0' ORDER BY id DESC ".$x );
+			foreach ( $nquery as $get){
+    			$track = $get['track'];
+    			$primary_id = $get['primary_id'];
+    			$id = $get['id'];
+          $result = mysqli_query($conn,"SELECT * FROM `files` WHERE id = '$id' AND subject LIKE '%".$where."%' OR id = '$id' AND docu_id LIKE '%".$where."%' ORDER BY id DESC ".$x );
+            foreach ( $result as $fetch){
+    			$id = $fetch['id'];
+    			$subject = $fetch['subject'];
+    			$classification = $fetch['classification'];
+    			$receive = $fetch['receive']
 		
-					
+	
     ?>
-
     <!---Modal for REMARKS ----->
     <div class="modal fade" id="myModall<?php echo $fetch['id']?>" aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -700,7 +745,7 @@ include('conn.php');
               echo "<td width='10%'>". $fetch['status'] ."</td>";
               echo "<td width='35%'>". $fetch['remarks'] ."</td>";
               echo "<td width='25%'>". $fetch['date'] ."</td>";
-			  echo "<td width='30%'>". $fetch['action'] ."</td>";
+			  echo "<td width='30%'>". $fetch['action'] ." - ". $fetch['department'] ."</td>";
               echo "</tr>";
               echo "</tbody>";
 
@@ -735,26 +780,40 @@ include('conn.php');
 
 
  <?php
-        } 
+			} }
         ?>
 		
-		
-<?php
+			<?php
+		if(isset($_GET['str']))
+		{
+			$where = $_GET['str'];
+			$x = "";
+		}
+		else
+		{
+			$where = " ";
+			$x = "LIMIT 50";
+		}
 include('conn.php');
-					$id = (int) $_SESSION['login'];
-		$query = $conn->query ("SELECT department FROM admin WHERE id = '$id' ") or die (mysqli_error());
-		$get = $query->fetch_array ();
-		$department = $get['department'];
-		$nquery=mysqli_query($conn,"select * from `files` WHERE department = '$department' AND classification = 'Outgoing' ORDER by id DESC ");
-		while($fetch = mysqli_fetch_array($nquery)){
-			$id = $fetch['id'];
-			$subject = $fetch['subject'];
-			$classification = $fetch['classification'];
+		 $id = (int) $_SESSION['login'];
+			$query = $conn->query ("SELECT * FROM `admin` WHERE id = '$id' ORDER BY date DESC ") or die (mysqli_error());
+		$file = $query->fetch_array ();
+		$tid = $file['tid'];
+			$nquery=mysqli_query($conn,"select * from `tags` WHERE tag = '$tid' AND `track` = '0' ORDER BY id DESC ".$x );
+			foreach ( $nquery as $get){
+    			$track = $get['track'];
+    			$primary_id = $get['primary_id'];
+    			$id = $get['id'];
+          $result = mysqli_query($conn,"SELECT * FROM `files` WHERE id = '$id' AND subject LIKE '%".$where."%' OR id = '$id' AND docu_id LIKE '%".$where."%' ORDER BY id DESC ".$x );
+            foreach ( $result as $fetch){
+    			$id = $fetch['id'];
+    			$subject = $fetch['subject'];
+    			$classification = $fetch['classification'];
+    			$receive = $fetch['receive']
 		
-					
+	
     ?>
-
- <!---Modal for TAGS----->
+  <!---Modal for TAGS----->
     <div class="modal fade" id="tags<?php echo $fetch['id']?>" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -909,7 +968,7 @@ include('conn.php');
 										$query = $conn->query ("SELECT * FROM users WHERE tid = '$tag' ORDER by lname ASC ") or die (mysqli_error());
 										while($fetchh = mysqli_fetch_array($query))
 										{
-											echo "<td width='30%'>". $fetchh['lname'] .", ". $fetch['fname'] ." ". $fetchh['mname'] ." - ". $fetchh['department'] ."</td>";
+											echo "<td width='30%'>". $fetchh['lname'] .", ". $fetchh['fname'] ." ". $fetchh['mname'] ." - ". $fetchh['department'] ."</td>";
 										}
 											echo "<td width='20%'>". $get['date'] ."</td>";
 											echo "<td width='10%'> VIEWED</td>";
@@ -1041,14 +1100,16 @@ include('conn.php');
       <!-- /.modal-dialog -->
     </div>
 
+
+
  <?php
-		} 
+		} }
 		
         ?>
 		
   </div>
   </main>
- <div class="row">
+  <div class="row">
 <footer class="footer">
     <div class="inner">
     <strong>Copyright &copy; 2019. All rights reserved.<br>Management Information Systems Department.</strong>
@@ -1062,13 +1123,15 @@ include('conn.php');
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
-  <script type="text/javascript" src="datatable/datatable.js"></script>
-  <script type="text/javascript">
+       <script type="text/javascript" src="datatable/datatable.js"></script>
+  	<script type="text/javascript">
   		$(document).ready(function () {
   			$('#data_table').DataTable( {
-  			    "order": [[ 4, "desc"]]
+  			    "order": [[ 4, "desc"]],
+
   			}
   			    );
+	  			    $('#data_table_filter').hide();
   		});
   	</script>
       </body>
