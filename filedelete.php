@@ -110,7 +110,7 @@ require("conn.php");
 												    			<tbody>
 												    						<?php
 											    					include('conn.php');
-																	$nquery		= mysqli_query($conn,"select * from `files` ORDER by id DESC LIMIT 100");
+																	$nquery		= mysqli_query($conn,"select * from `files` ORDER by id DESC ");
 																	while($fetch = mysqli_fetch_array($nquery)){
 																		$id = $fetch['id'];
 											    				?>
